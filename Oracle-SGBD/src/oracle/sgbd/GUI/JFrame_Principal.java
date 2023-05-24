@@ -4,20 +4,9 @@
  */
 package oracle.sgbd.GUI;
 
-import Nodos.PruebaNodo;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-import javax.swing.SwingUtilities;
-import oracle.sgbd.DAL.Conexion;
+
 
 /**
  *
@@ -28,13 +17,9 @@ public class JFrame_Principal extends javax.swing.JFrame {
     /**
      * Creates new form JNodo
      */
-    private DefaultTreeModel modelo;
-    private DefaultMutableTreeNode nodoSeleccionado;
 
     public JFrame_Principal() {
         initComponents();
-        modelo = (DefaultTreeModel) jTree1.getModel();
-
     }
 
     //Metodo de confirmacion al salir
@@ -59,18 +44,6 @@ public class JFrame_Principal extends javax.swing.JFrame {
             
         }
     }
-
-    private void senteciaSelectConsola(String consulta) throws SQLException {
-        ResultSet resultset = PruebaNodo.Select(consulta);
-        while (resultset.next()) {
-            String columna1 = resultset.getString("id");
-            int columna2 = resultset.getInt("id");
-
-            jTextArea1.append("Columna1: " + columna1 + ", Columna2: " + columna2 + "\n");
-
-        }
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -89,11 +62,11 @@ public class JFrame_Principal extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        SQLQUERY = new javax.swing.JTextArea();
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        CONSOLE = new javax.swing.JTextArea();
         jToolBar1 = new javax.swing.JToolBar();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -103,8 +76,8 @@ public class JFrame_Principal extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jSeparator5 = new javax.swing.JToolBar.Separator();
-        jButton8 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
+        EJECUTAR = new javax.swing.JButton();
+        CANCELAR = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem10 = new javax.swing.JMenuItem();
@@ -286,16 +259,11 @@ public class JFrame_Principal extends javax.swing.JFrame {
         treeNode1.add(treeNode2);
         jTree1.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
         jTree1.setComponentPopupMenu(jPopupMenu1);
-        jTree1.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
-            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
-                jTree1ValueChanged(evt);
-            }
-        });
         jScrollPane1.setViewportView(jTree1);
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane3.setViewportView(jTextArea2);
+        SQLQUERY.setColumns(20);
+        SQLQUERY.setRows(5);
+        jScrollPane3.setViewportView(SQLQUERY);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -315,9 +283,9 @@ public class JFrame_Principal extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("SQLQuery", jPanel1);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        CONSOLE.setColumns(20);
+        CONSOLE.setRows(5);
+        jScrollPane2.setViewportView(CONSOLE);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -376,17 +344,17 @@ public class JFrame_Principal extends javax.swing.JFrame {
         jToolBar1.add(jButton6);
         jToolBar1.add(jSeparator5);
 
-        jButton8.setText("Ejecutar");
-        jButton8.setFocusable(false);
-        jButton8.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton8.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(jButton8);
+        EJECUTAR.setText("Ejecutar");
+        EJECUTAR.setFocusable(false);
+        EJECUTAR.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        EJECUTAR.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(EJECUTAR);
 
-        jButton9.setText("Cancelar ejecución");
-        jButton9.setFocusable(false);
-        jButton9.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton9.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(jButton9);
+        CANCELAR.setText("Cancelar ejecución");
+        CANCELAR.setFocusable(false);
+        CANCELAR.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        CANCELAR.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(CANCELAR);
 
         jMenu1.setText("Archivo");
 
@@ -613,20 +581,6 @@ public class JFrame_Principal extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTree1ValueChanged
-        // TODO add your handling code here:
-        //EXTRAER NOMBRE DE NODO SELECCIONADO
-        nodoSeleccionado = (DefaultMutableTreeNode) jTree1.getLastSelectedPathComponent();
-        if (nodoSeleccionado != null) {
-            //this.jTextField2.setText((String) nodoSeleccionado.getUserObject());
-        }
-        /*if (this.jTextField2.getText() == "master") {
-            select.setVisible(true);
-            insert.setVisible(true);
-            jButton7.setVisible(true);
-        }*/
-    }//GEN-LAST:event_jTree1ValueChanged
-
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:        
     }//GEN-LAST:event_formWindowClosing
@@ -683,14 +637,16 @@ public class JFrame_Principal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton CANCELAR;
+    private javax.swing.JTextArea CONSOLE;
+    private javax.swing.JButton EJECUTAR;
+    private javax.swing.JTextArea SQLQUERY;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
@@ -764,8 +720,6 @@ public class JFrame_Principal extends javax.swing.JFrame {
     private javax.swing.JToolBar.Separator jSeparator5;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JTree jTree1;
     // End of variables declaration//GEN-END:variables
