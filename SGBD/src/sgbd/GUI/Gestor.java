@@ -37,6 +37,10 @@ public class Gestor extends javax.swing.JFrame {
         DefaultMutableTreeNode childNode2;
         DefaultMutableTreeNode childNode3;
         DefaultMutableTreeNode childNode4;
+        DefaultMutableTreeNode childNode5;
+        DefaultMutableTreeNode childNode6;
+        DefaultMutableTreeNode childNode7;
+        DefaultMutableTreeNode childNode8;
         try {
             // Obtener los metadatos de la base de datos
             DatabaseMetaData metaData = connection.getMetaData();
@@ -54,6 +58,43 @@ public class Gestor extends javax.swing.JFrame {
                 childNode2 = new DefaultMutableTreeNode(tableName); // Segundo hijo
                 childNode1.add(childNode2); // Agrega childNode2 como hijo del nodo raíz
             }
+
+            resultSet.close();
+
+            childNode3 = new DefaultMutableTreeNode("Vistas"); // Primer hijo
+            rootNode.add(childNode3);
+            // Obtener vistas
+            ResultSet views = metaData.getTables(null, null, null, new String[]{"VIEW"});
+            while (views.next()) {
+                String viewName = views.getString("TABLE_NAME");
+                childNode4 = new DefaultMutableTreeNode(viewName);
+                childNode3.add(childNode4);
+            }
+            views.close();
+            String catalog = connection.getCatalog();
+            String schemaPattern = null;  // Puedes proporcionar un patrón de esquema específico si lo deseas
+            String tableNamePattern = null;  // Puedes proporcionar un patrón de nombre de tabla específico si lo deseas
+
+            childNode5 = new DefaultMutableTreeNode("Triggers"); // Primer hijo
+            rootNode.add(childNode5);
+            ResultSet triggers = metaData.getTables(catalog, schemaPattern, tableNamePattern, new String[]{"TRIGGER"});
+            while (triggers.next()) {
+                String triggerName = triggers.getString("TABLE_NAME");
+                childNode6 = new DefaultMutableTreeNode(triggerName);
+                childNode5.add(childNode6);
+            }
+            triggers.close();
+//            String procedureNamePattern = null;
+//
+//            childNode7 = new DefaultMutableTreeNode("Procedures"); // Primer hijo
+//            rootNode.add(childNode7);
+//            ResultSet procedures = metaData.getProcedures(catalog, schemaPattern, procedureNamePattern);
+//            while (procedures.next()) {
+//                String procedureName = procedures.getString("PROCEDURE_NAME");
+//                childNode8 = new DefaultMutableTreeNode(procedureName);
+//                childNode7.add(childNode8);
+//            }
+//            procedures.close();
 
             DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
             jTree_Arbol.setModel(treeModel);
